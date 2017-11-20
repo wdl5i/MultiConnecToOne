@@ -88,7 +88,8 @@ public class ConnectionVerticle extends AbstractVerticle {
                     DataMessage dataMessage = message.body();
                     if(dataMessage.getAction() == DataMessage.ACTION_CONNECTION_REMOVE) {
                         NetSocket socket = idSocketMap.get(dataMessage.getId());
-                        socket.close();
+                        if(socket != null)
+                            socket.close();
                     }
                 });
 
