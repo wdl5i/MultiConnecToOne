@@ -73,7 +73,8 @@ public class DataMessage implements Serializable {
 
         @Override
         public DataMessage decodeFromWire(int pos, Buffer buffer) {
-            final ByteArrayInputStream bais = new ByteArrayInputStream(buffer.getBytes());
+            byte[] bufferBytes = buffer.getBytes();
+            final ByteArrayInputStream bais = new ByteArrayInputStream(bufferBytes);
             ObjectInputStream ois = null;
             DataMessage msg = null;
             try {
