@@ -47,6 +47,3 @@ or
 ```java -jar client-1.0-SNAPSHOT-fat.jar -cluster -cluster-host 192.168.112.9```
 
 
-# MultiConnecToOne
-# MultiConnecToOne
-# MultiConnecToOne
