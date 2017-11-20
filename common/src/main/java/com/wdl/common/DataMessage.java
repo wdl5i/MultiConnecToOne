@@ -9,7 +9,7 @@ import java.io.*;
 /**
  * Created by wdl on 2017/11/20.
  */
-public class DataMessage {
+public class DataMessage implements Serializable {
     public static final String TYPE_CONNECTION = "Connection";
     public static final String TYPE_MESSAGE = "Message";
 
@@ -59,13 +59,13 @@ public class DataMessage {
     public static class DataMessageCodec implements MessageCodec<DataMessage, DataMessage> {
         @Override
         public void encodeToWire(Buffer buffer, DataMessage dataMessage) {
-            final ByteArrayOutputStream b = new ByteArrayOutputStream();
-            ObjectOutputStream o;
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos;
             try {
-                o = new ObjectOutputStream(b);
-                o.writeObject(dataMessage);
-                o.close();
-                buffer.appendBytes(b.toByteArray());
+                oos = new ObjectOutputStream(baos);
+                oos.writeObject(dataMessage);
+                oos.close();
+                buffer.appendBytes(baos.toByteArray());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -73,13 +73,13 @@ public class DataMessage {
 
         @Override
         public DataMessage decodeFromWire(int pos, Buffer buffer) {
-            final ByteArrayInputStream b = new ByteArrayInputStream(buffer.getBytes());
-            ObjectInputStream o = null;
+            final ByteArrayInputStream bais = new ByteArrayInputStream(buffer.getBytes());
+            ObjectInputStream ois = null;
             DataMessage msg = null;
             try {
-                o = new ObjectInputStream(b);
-                msg = (DataMessage) o.readObject();
-            } catch (IOException | ClassNotFoundException e) {
+                ois = new ObjectInputStream(bais);
+                msg = (DataMessage) ois.readObject();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return msg;

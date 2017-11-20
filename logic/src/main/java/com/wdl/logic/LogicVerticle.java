@@ -14,8 +14,8 @@ public class LogicVerticle extends AbstractVerticle {
     @Override
     public void start() {
         EventBus eventBus = vertx.eventBus();
-        eventBus
-                .<DataMessage>consumer(DataMessage.TYPE_CONNECTION, message -> {
+        eventBus.registerDefaultCodec(DataMessage.class, new DataMessage.DataMessageCodec());
+        eventBus.<DataMessage>consumer(DataMessage.TYPE_CONNECTION, message -> {
                     DataMessage dataMessage = message.body();
                     if (dataMessage.getAction() == DataMessage.ACTION_CONNECTION_ADD) {
                         logger.info("A client connected, " + dataMessage.getId());
@@ -23,12 +23,13 @@ public class LogicVerticle extends AbstractVerticle {
                         logger.info("A client disConnected, " + dataMessage.getId());
                     }
                 });
-        eventBus
-                .<DataMessage>consumer(DataMessage.TYPE_MESSAGE, message -> {
+        eventBus.<DataMessage>consumer(DataMessage.TYPE_MESSAGE, message -> {
                     DataMessage dataMessage = message.body();
-                    logger.info("client " + dataMessage.getId() + "send message:" + dataMessage.getContent());
+
+                    logger.info("client " + dataMessage.getId() + " send message:" + dataMessage.getContent());
                 });
-        eventBus.send(DataMessage.TYPE_MESSAGE, new DataMessage(DataMessage.ACTION_CONNECTION_REMOVE, (short)-32768));
+        //
+        //eventBus.send(DataMessage.TYPE_MESSAGE, new DataMessage(DataMessage.ACTION_CONNECTION_REMOVE, (short)-32768));
         logger.info("Logic server started");
     }
 
