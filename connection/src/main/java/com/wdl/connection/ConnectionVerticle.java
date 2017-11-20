@@ -30,14 +30,6 @@ public class ConnectionVerticle extends AbstractVerticle {
         NetServer server = vertx.createNetServer();
         EventBus eventBus = vertx.eventBus();
 
-        server.listen(1234, "localhost", res -> {
-            if (res.succeeded()) {
-                logger.info("Server is now listening!");
-            } else {
-                logger.info("Failed to bind!");
-            }
-        });
-
         server.connectHandler(socket -> {
             socket.handler(buffer -> {
                 //logger.debug(socket.remoteAddress().host());
@@ -79,6 +71,15 @@ public class ConnectionVerticle extends AbstractVerticle {
                 );
             });
         });
+
+        server.listen(1234, "localhost", res -> {
+            if (res.succeeded()) {
+                logger.info("Server is now listening!");
+            } else {
+                logger.info("Failed to bind!");
+            }
+        });
+
         //接受来自backend的指令
         eventBus.<DataMessage>consumer(DataMessage.TYPE_CONNECTION,
                 message -> {
