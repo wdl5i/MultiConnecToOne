@@ -1,5 +1,11 @@
 package com.wdl.common;
 
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.MessageCodec;
+
+import java.io.*;
+
 /**
  * Created by wdl on 2017/11/20.
  */
@@ -48,5 +54,50 @@ public class DataMessage {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public static class DataMessageCodec implements MessageCodec<DataMessage, DataMessage> {
+        @Override
+        public void encodeToWire(Buffer buffer, DataMessage dataMessage) {
+            final ByteArrayOutputStream b = new ByteArrayOutputStream();
+            ObjectOutputStream o;
+            try {
+                o = new ObjectOutputStream(b);
+                o.writeObject(dataMessage);
+                o.close();
+                buffer.appendBytes(b.toByteArray());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public DataMessage decodeFromWire(int pos, Buffer buffer) {
+            final ByteArrayInputStream b = new ByteArrayInputStream(buffer.getBytes());
+            ObjectInputStream o = null;
+            DataMessage msg = null;
+            try {
+                o = new ObjectInputStream(b);
+                msg = (DataMessage) o.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return msg;
+        }
+
+        @Override
+        public DataMessage transform(DataMessage dataMessage) {
+            return dataMessage;
+        }
+
+        @Override
+        public String name() {
+            return "DataMessageCodec";
+        }
+
+        @Override
+        public byte systemCodecID() {
+            return -1;
+        }
     }
 }

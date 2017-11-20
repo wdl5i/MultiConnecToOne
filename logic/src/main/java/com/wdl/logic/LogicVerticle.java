@@ -29,8 +29,6 @@ public class LogicVerticle extends AbstractVerticle {
                     logger.info("client " + dataMessage.getId() + "send message:" + dataMessage.getContent());
                 });
         eventBus.send(DataMessage.TYPE_MESSAGE, new DataMessage(DataMessage.ACTION_CONNECTION_REMOVE, (short)-32768));
-
-
         logger.info("Logic server started");
     }
 

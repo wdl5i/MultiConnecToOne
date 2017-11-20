@@ -7,6 +7,7 @@ import com.wdl.common.Runner;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.logging.Logger;
@@ -56,6 +57,7 @@ public class ConnectionVerticle extends AbstractVerticle {
                         );
                     }
                     //回复数据
+                    eventBus.registerDefaultCodec(DataMessage.class, new DataMessage.DataMessageCodec());
                     eventBus.send(DataMessage.TYPE_MESSAGE,
                             new DataMessage(DataMessage.ACTION_MESSAGE, event.getId(), event.getContent()),
                             asyncResult -> {
