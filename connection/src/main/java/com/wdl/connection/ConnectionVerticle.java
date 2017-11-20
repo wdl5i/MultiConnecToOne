@@ -29,6 +29,7 @@ public class ConnectionVerticle extends AbstractVerticle {
     public void start() {
         NetServer server = vertx.createNetServer();
         EventBus eventBus = vertx.eventBus();
+        eventBus.registerDefaultCodec(DataMessage.class, new DataMessage.DataMessageCodec());
 
         server.connectHandler(socket -> {
             socket.handler(buffer -> {
@@ -49,12 +50,13 @@ public class ConnectionVerticle extends AbstractVerticle {
                         );
                     }
                     //回复数据
-                    eventBus.registerDefaultCodec(DataMessage.class, new DataMessage.DataMessageCodec());
+
                     eventBus.send(DataMessage.TYPE_MESSAGE,
                             new DataMessage(DataMessage.ACTION_MESSAGE, event.getId(), event.getContent()),
                             asyncResult -> {
                                 Message message = asyncResult.result();
-                                socket.write(Buffer.buffer().appendString(message.body().toString()));
+                                if(message != null)
+                                    socket.write(Buffer.buffer().appendString(message.body().toString()));
                             });
                     idSocketMap.put(event.getId(), socket);
                     logger.info("I received some bytes: " + event);
