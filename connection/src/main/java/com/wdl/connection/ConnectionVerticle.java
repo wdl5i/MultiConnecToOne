@@ -55,7 +55,7 @@ public class ConnectionVerticle extends AbstractVerticle {
                             new DataMessage(DataMessage.ACTION_MESSAGE, event.getId(), event.getContent()),
                             asyncResult -> {
                                 Message message = asyncResult.result();
-                                if(message != null)
+                                if(message != null && socket != null)
                                     socket.write(Buffer.buffer().appendString(message.body().toString()));
                             });
                     idSocketMap.put(event.getId(), socket);

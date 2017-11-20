@@ -7,7 +7,7 @@ import io.vertx.core.buffer.Buffer;
  */
 public class DataEvent {
     private byte length;
-    private short id;
+    private short id = Short.MAX_VALUE;
     private String content;
 
     public DataEvent() {
