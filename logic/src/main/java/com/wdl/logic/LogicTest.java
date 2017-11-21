@@ -62,7 +62,6 @@ public class LogicTest {
     @Test
     public void printSomething(TestContext context) {
 
-
         Awaitility.waitAtMost(Duration.ONE_MINUTE).await().untilTrue(loaded);
         System.out.println("Print from method printSomething()");
     }
